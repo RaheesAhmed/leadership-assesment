@@ -1,9 +1,7 @@
 import { responsibilityLevelsData } from "@/utils/data_loader";
-import { Demographics } from "@/types/assessment";
+import { FormData } from "@/types/assessment";
 
-export async function classifyResponsibilityLevel(
-  demographicInfo: Demographics
-) {
+export async function classifyResponsibilityLevel(demographicInfo: FormData) {
   if (
     !responsibilityLevelsData ||
     !Array.isArray(responsibilityLevelsData) ||
