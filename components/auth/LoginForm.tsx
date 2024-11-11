@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -18,7 +18,8 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "next-auth/react";
 
-export default function LoginForm() {
+// Create a separate component for the login form content
+function LoginFormContent() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -164,6 +165,27 @@ export default function LoginForm() {
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+// Main component that wraps the content in Suspense
+export default function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-secondary p-4">
+          <div className="w-full max-w-md">
+            <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm">
+              <CardContent className="flex justify-center p-6">
+                <Loader2 className="h-6 w-6 animate-spin" />
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      }
+    >
+      <LoginFormContent />
+    </Suspense>
   );
 }
 
