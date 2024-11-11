@@ -21,6 +21,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  await classifierService.initialize();
+
   try {
     const session = await getServerSession(authOptions);
 
@@ -30,8 +32,6 @@ export async function POST(request: Request) {
         { status: 401 }
       );
     }
-
-    await classifierService.initialize();
 
     const demographic = await request.json();
     const { error, data } = demographicSchema.safeParse(demographic);
