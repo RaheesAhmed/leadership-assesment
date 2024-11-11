@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import { StarIcon, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AssessmentResponse } from "@/types/types";
+import { useToast } from "@/hooks/use-toast";
 
 interface LevelTwoQuestion {
   id: string;
@@ -53,6 +54,7 @@ export default function LevelTwoQuestions({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -180,6 +182,40 @@ export default function LevelTwoQuestions({
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const formattedResponses: AssessmentResponse[] = userResponses.map(
+        (response) => ({
+          questionId: response.questionId,
+          rating: response.rating,
+          response: response.answer,
+          question: {
+            question:
+              questions.find((q) => q.id === response.questionId)?.question ||
+              "",
+          },
+          area: capability,
+        })
+      );
+
+      await onComplete(formattedResponses);
+    } catch (error) {
+      console.error("Error submitting responses:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit responses. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isAllQuestionsAnswered = () => {
+    return userResponses.length === questions.length;
   };
 
   if (loading) {
@@ -329,11 +365,21 @@ export default function LevelTwoQuestions({
             disabled={isSubmitting}
             className="flex items-center"
           >
-            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {currentQuestionIndex === questions.length - 1
-              ? "Complete"
-              : "Next"}
-            <ChevronRight className="w-4 h-4 ml-2" />
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {currentQuestionIndex === questions.length - 1
+                  ? "Completing..."
+                  : "Processing..."}
+              </>
+            ) : (
+              <>
+                {currentQuestionIndex === questions.length - 1
+                  ? "Complete"
+                  : "Next"}
+                <ChevronRight className="w-4 h-4 ml-2" />
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

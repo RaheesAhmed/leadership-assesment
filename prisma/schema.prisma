@@ -1,12 +1,15 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["metrics"]
 }
 
 datasource db {
- provider = "postgresql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  
+  relationMode = "prisma"
+  poolTimeout = 30
+  pool = 5
 }
 
 model User {

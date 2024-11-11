@@ -51,7 +51,7 @@ export default function Navbar() {
     ? [
         { name: "Home", href: "/" },
         { name: "Assessment", href: "/start" },
-        { name: "My Plans", href: "/plans" },
+        { name: "My Plans", href: "/dashboard/plans" },
         { name: "API Docs", href: "/api-docs" },
         { name: "Pricing", href: "/subscription" },
       ]

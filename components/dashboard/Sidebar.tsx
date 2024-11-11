@@ -1,26 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ClipboardList, LineChart, Users, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import {
-  LayoutDashboard,
-  FileText,
-  ClipboardList,
-  UserCircle,
-  Settings,
-  ChevronRight,
-  LogOut,
-} from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
 
 const routes = [
   {
     label: "Dashboard",
-    icon: LayoutDashboard,
+    icon: Home,
     href: "/dashboard",
     color: "text-sky-500",
   },
@@ -31,130 +20,47 @@ const routes = [
     color: "text-violet-500",
   },
   {
-    label: "Development Plans",
-    icon: FileText,
-    href: "/dashboard/plans",
+    label: "Demographics",
+    icon: Users,
+    href: "/dashboard/demographics",
     color: "text-pink-700",
   },
   {
-    label: "Demographics",
-    icon: UserCircle,
-    href: "/dashboard/demographics",
+    label: "Development Plans",
+    icon: LineChart,
+    href: "/dashboard/plans",
     color: "text-orange-700",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "/dashboard/settings",
-    color: "text-gray-700",
   },
 ];
 
-const Sidebar = () => {
+export default function Sidebar() {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const { signOut } = useAuth();
-
-  const toggleSidebar = () => setIsCollapsed(!isCollapsed);
 
   return (
-    <motion.div
-      className={cn(
-        "flex flex-col h-full bg-gray-900 text-white transition-all duration-300",
-        isCollapsed ? "w-20" : "w-64"
-      )}
-      animate={{ width: isCollapsed ? "80px" : "256px" }}
-    >
-      <div className="px-3 py-4 flex flex-col h-full">
-        <div className="flex items-center justify-between mb-8">
-          <Link href="/dashboard" className="flex items-center">
-            <motion.h1
-              className={cn(
-                "text-2xl font-bold bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent",
-                isCollapsed && "hidden"
-              )}
-              animate={{
-                opacity: isCollapsed ? 0 : 1,
-                scale: isCollapsed ? 0.5 : 1,
-              }}
-            >
-              AssessHub
-            </motion.h1>
-            {isCollapsed && (
-              <motion.div
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-sky-400 to-blue-500 flex items-center justify-center"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-              >
-                <span className="text-xl font-bold text-white">A</span>
-              </motion.div>
-            )}
-          </Link>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white"
-            onClick={toggleSidebar}
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            <ChevronRight
-              className={cn(
-                "h-6 w-6 transition-transform",
-                isCollapsed && "rotate-180"
-              )}
-            />
-          </Button>
-        </div>
-        <nav className="space-y-2 flex-1">
+    <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
+      <div className="px-3 py-2 flex-1">
+        <Link href="/dashboard" className="flex items-center pl-3 mb-14">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+        </Link>
+        <div className="space-y-1">
           {routes.map((route) => (
-            <Link
-              key={route.href}
-              href={route.href}
-              className={cn(
-                "flex items-center p-3 w-full rounded-lg transition-colors",
-                pathname === route.href
-                  ? "bg-white/10 text-white"
-                  : "text-zinc-400 hover:text-white hover:bg-white/5"
-              )}
-            >
-              <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
-              <motion.span
-                className="text-sm font-medium"
-                animate={{
-                  opacity: isCollapsed ? 0 : 1,
-                  width: isCollapsed ? 0 : "auto",
-                }}
+            <Link href={route.href} key={route.href}>
+              <Button
+                variant={pathname === route.href ? "secondary" : "ghost"}
+                className={cn(
+                  "w-full justify-start pl-3 mb-1",
+                  pathname === route.href
+                    ? "bg-white/10 hover:bg-white/20"
+                    : "hover:bg-white/10"
+                )}
               >
+                <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
                 {route.label}
-              </motion.span>
-              {pathname === route.href && (
-                <motion.div
-                  className="absolute left-0 w-1 h-8 bg-blue-500 rounded-r-full"
-                  layoutId="activeRoute"
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                />
-              )}
+              </Button>
             </Link>
           ))}
-        </nav>
-        <Button
-          variant="ghost"
-          className="mt-auto text-zinc-400 hover:text-white hover:bg-white/5 justify-start"
-          onClick={() => signOut()}
-        >
-          <LogOut className="h-5 w-5 mr-3" />
-          <motion.span
-            animate={{
-              opacity: isCollapsed ? 0 : 1,
-              width: isCollapsed ? 0 : "auto",
-            }}
-          >
-            Log out
-          </motion.span>
-        </Button>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
-};
-
-export default Sidebar;
+}

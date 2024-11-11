@@ -229,9 +229,7 @@ export default function LevelOneQuestions({
     setIsSubmitting(true);
     try {
       const formattedResponses = formatResponsesForSubmission();
-
-      // Call onComplete with the final responses
-      onComplete(formattedResponses);
+      await onComplete(formattedResponses);
     } catch (error) {
       console.error("Error submitting assessment:", error);
       toast({
@@ -670,18 +668,24 @@ export default function LevelOneQuestions({
                 disabled={isSubmitting}
                 className="flex items-center text-lg"
               >
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    {(isLevelTwoVisible &&
+                      currentQuestion === levelTwoQuestions.length - 1) ||
+                    (!isLevelTwoVisible &&
+                      currentArea === assessmentData.length - 1 &&
+                      currentQuestion ===
+                        assessmentData[currentArea].questions.length - 1)
+                      ? "Complete"
+                      : "Next"}
+                    <ChevronRight className="w-5 h-5 ml-2" />
+                  </>
                 )}
-                {(isLevelTwoVisible &&
-                  currentQuestion === levelTwoQuestions.length - 1) ||
-                (!isLevelTwoVisible &&
-                  currentArea === assessmentData.length - 1 &&
-                  currentQuestion ===
-                    assessmentData[currentArea].questions.length - 1)
-                  ? "Complete"
-                  : "Next"}
-                <ChevronRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
           </CardContent>

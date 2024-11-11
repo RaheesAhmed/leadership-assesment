@@ -478,6 +478,14 @@ const Classification: React.FC<ClassificationProps> = ({ onComplete }) => {
     </motion.div>
   );
 
+  // Add a function to check if all questions are answered
+  const isAllQuestionsAnswered = () => {
+    return questions.every((question) => {
+      const response = userInfo[question.id];
+      return response && response.trim() !== "";
+    });
+  };
+
   return (
     <div className="min-h-screen  flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -549,23 +557,38 @@ const Classification: React.FC<ClassificationProps> = ({ onComplete }) => {
                   </Button>
                   {currentStep < questions.length - 1 ? (
                     <Button
-                      type="button"
                       onClick={handleNext}
+                      disabled={isSubmitting}
                       className="flex items-center"
                     >
-                      Next
-                      <ChevronRight className="w-4 h-4 ml-2" />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          {currentQuestion.id === questions.length - 1
+                            ? "Submit"
+                            : "Next"}
+                          <ChevronRight className="w-4 h-4 ml-2" />
+                        </>
+                      )}
                     </Button>
                   ) : (
                     <Button
                       type="submit"
-                      disabled={isSubmitting}
-                      className="bg-green-500 hover:bg-green-600"
+                      disabled={isSubmitting || !isAllQuestionsAnswered()}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg"
                     >
-                      {isSubmitting && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {isSubmitting ? (
+                        <div className="flex items-center justify-center">
+                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                          <span>Submitting Classification...</span>
+                        </div>
+                      ) : (
+                        <span>Submit Classification</span>
                       )}
-                      Submit
                     </Button>
                   )}
                 </div>
