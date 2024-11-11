@@ -1,7 +1,21 @@
 import { responsibilityLevelsData } from "@/utils/data_loader";
-import { FormData } from "@/types/assessment";
 
-export async function classifyResponsibilityLevel(demographicInfo: FormData) {
+// First, let's define the correct input type
+export interface ResponsibilityLevelInput {
+  industry: string;
+  companySize: number;
+  department: string;
+  jobTitle: string;
+  directReports: number;
+  decisionLevel: "Operational" | "Tactical" | "Strategic";
+  typicalProject: string;
+  levelsToCEO: number;
+  managesBudget: boolean;
+}
+
+export async function classifyResponsibilityLevel(
+  data: ResponsibilityLevelInput
+) {
   if (
     !responsibilityLevelsData ||
     !Array.isArray(responsibilityLevelsData) ||
@@ -12,18 +26,16 @@ export async function classifyResponsibilityLevel(demographicInfo: FormData) {
   }
 
   const {
-    name,
     industry,
     companySize,
     department,
     jobTitle,
     directReports,
-    reportingRoles,
     decisionLevel,
     typicalProject,
     levelsToCEO,
     managesBudget,
-  } = demographicInfo;
+  } = data;
 
   // Check if required fields are present
   if (
@@ -32,7 +44,7 @@ export async function classifyResponsibilityLevel(demographicInfo: FormData) {
     directReports === undefined ||
     levelsToCEO === undefined
   ) {
-    console.error("Missing required demographic information", demographicInfo);
+    console.error("Missing required demographic information", data);
     throw new Error("Missing required demographic information");
   }
 

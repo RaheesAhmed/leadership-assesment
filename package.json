@@ -13,7 +13,8 @@
     "prisma:reset": "prisma migrate reset",
     "db:setup": "npm run verify-db && npm run prisma:generate && npm run prisma:migrate && npm run prisma:seed",
     "verify-db": "ts-node -T scripts/verify-db.ts",
-    "create-admin": "tsx scripts/create-admin.ts"
+    "create-admin": "tsx scripts/create-admin.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.3",

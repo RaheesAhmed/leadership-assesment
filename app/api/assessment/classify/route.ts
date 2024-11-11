@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { classifyResponsibilityLevel } from "@/lib/classifiers/responsibility-level";
+import {
+  classifyResponsibilityLevel,
+  ResponsibilityLevelInput,
+} from "@/lib/classifiers/responsibility-level";
 import { demographicSchema } from "@/lib/validators/demographics";
 import { classifierService } from "@/lib/services/classifier-service";
 import { prisma } from "@/lib/db";
@@ -43,7 +46,21 @@ export async function POST(request: Request) {
       );
     }
 
-    const responsibilityLevel = await classifyResponsibilityLevel(data);
+    const classifierInput: ResponsibilityLevelInput = {
+      industry: data.industry,
+      companySize: data.companySize,
+      department: data.department,
+      jobTitle: data.jobTitle,
+      directReports: data.directReports,
+      decisionLevel: data.decisionLevel,
+      typicalProject: data.typicalProject,
+      levelsToCEO: data.levelsToCEO,
+      managesBudget: data.managesBudget,
+    };
+
+    const responsibilityLevel = await classifyResponsibilityLevel(
+      classifierInput
+    );
 
     // Create or update demographic and assessment in a transaction
     const [savedDemographic, assessment] = await prisma.$transaction([
