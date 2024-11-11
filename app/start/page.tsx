@@ -51,7 +51,7 @@ interface AssessmentResponse {
 }
 
 export default function AssessmentFlow() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading  } = useAuth();
   const [step, setStep] = useState<
     "intro" | "classification" | "levelOne" | "levelTwo" | "complete"
   >("intro");
