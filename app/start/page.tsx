@@ -50,8 +50,11 @@ interface AssessmentResponse {
   area: string;
 }
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching for this page
+
 export default function AssessmentFlow() {
-  const { user, isAuthenticated, isLoading  } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [step, setStep] = useState<
     "intro" | "classification" | "levelOne" | "levelTwo" | "complete"
   >("intro");
