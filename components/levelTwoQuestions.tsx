@@ -16,7 +16,8 @@ import { StarIcon, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AssessmentResponse } from "@/types/types";
 import { useToast } from "@/hooks/use-toast";
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching for this page
 interface LevelTwoQuestion {
   id: string;
   capability: string;

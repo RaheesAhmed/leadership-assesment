@@ -31,6 +31,9 @@ import {
 } from "@/types/types";
 import { useAuth } from "@/hooks/useAuth";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching for this page
+
 const Classification: React.FC<ClassificationProps> = ({ onComplete }) => {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const router = useRouter();

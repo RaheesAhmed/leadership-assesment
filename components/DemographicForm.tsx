@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching for this page
 
 interface DemographicFormProps {
   questions: Question[];

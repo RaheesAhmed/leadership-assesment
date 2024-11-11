@@ -24,7 +24,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LevelTwoQuestions from "@/components/levelTwoQuestions";
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0; // Disable caching for this page
 interface Question {
   id: string;
   ratingQuestion: string;
